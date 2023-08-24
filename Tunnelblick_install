@@ -14,7 +14,10 @@ WAITING_ROOM_DIR="/Library/Application Support/JAMF/Waiting Room"  # Path to the
 DMG_FILE="$4"  # Name of the DMG file (provided as the fourth argument in Jamf)
 MOUNT_POINT="/Volumes/Tunnelblick"  # Mount point for the DMG
 INSTALLER_COMMAND="/Volumes/Tunnelblick/Tunnelblick.app/Contents/Resources/installer"  # Path to the installer command
-INSTALLER_ARGUMENTS="3"  # Arguments for the installer command, 3= TUNNELBLICK_APP_PATH is the path to a copy of the Tunnelblick.app to be installed. 
+INSTALLER_FIRST_ARGUMENT="3" # BIT0=1 => Clear installer log;
+                             # BIT1=1 => Copy and install Tunnelblick.app from path given by third argument
+TUNNELBLICK_APP_PATH="$MOUNT_POINT/Tunnelblick.app" # path to a copy of the Tunnelblick.app to be installed.
+INSTALLER_ARGUMENTS=""$INSTALLER_FIRST_ARGUMENT" "$TUNNELBLICK_APP_PATH""  # Arguments for the installer command
 
 # Check if the Waiting Room directory exists
 if [ -d "$WAITING_ROOM_DIR" ]; then
