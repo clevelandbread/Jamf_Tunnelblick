@@ -34,8 +34,8 @@ if [ -d "$WAITING_ROOM_DIR" ]; then
         echo "DMG attached. Running installer..."
         
         # Run the installer command
-        "$INSTALLER_COMMAND" "$INSTALLER_ARGUMENTS"
         
+        "$INSTALLER_COMMAND" $INSTALLER_ARGUMENTS
         echo "Installer completed. Waiting for 5 seconds..."
         
         # Wait for 5 seconds
