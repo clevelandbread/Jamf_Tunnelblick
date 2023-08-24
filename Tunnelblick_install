@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Script Name: Tunnelblick_install
+# Version: 1.0
+# Author: Michael Cleveland
+# Description: This script automates the installation process of Tunnelblick, a VPN client for macOS, using basic Bash scripting. It mounts a provided DMG file, runs the Tunnelblick installer, and cleans up temporary files after installation. Designed to be used with JAMF Pro for deployment.
+# Usage: ./Tunnelblick_install.sh
+######################################################################################################################################################
+
 # Define variables
 WAITING_ROOM_DIR="/Library/Application Support/JAMF/Waiting Room"  # Path to the JAMF Waiting Room directory
 DMG_FILE="$4"  # Name of the DMG file (provided as the fourth argument in Jamf)
