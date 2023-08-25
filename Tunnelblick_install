@@ -3,7 +3,9 @@
 # Script Name: Tunnelblick_install
 # Version: 1.0
 # Author: Michael Cleveland
-# Description: This script automates the installation process of Tunnelblick, a VPN client for macOS, using basic Bash scripting. It mounts a provided DMG file, runs the Tunnelblick installer, and cleans up temporary files after installation. Designed to be used with JAMF Pro for deployment.
+# Description: This script automates the installation process of Tunnelblick, a VPN client for macOS,
+#              using basic Bash scripting. It mounts a provided DMG file, runs the Tunnelblick installer,
+#              and cleans up temporary files after installation. Designed to be used with JAMF Pro for deployment.
 # Usage: ./Tunnelblick_install.sh
 ######################################################################################################################################################
 
@@ -12,38 +14,41 @@ WAITING_ROOM_DIR="/Library/Application Support/JAMF/Waiting Room"  # Path to the
 DMG_FILE="$4"  # Name of the DMG file (provided as the fourth argument in Jamf)
 MOUNT_POINT="/Volumes/Tunnelblick"  # Mount point for the DMG
 INSTALLER_COMMAND="/Volumes/Tunnelblick/Tunnelblick.app/Contents/Resources/installer"  # Path to the installer command
-INSTALLER_ARGUMENTS="3"  # Arguments for the installer command, 3= TUNNELBLICK_APP_PATH is the path to a copy of the Tunnelblick.app to be installed. 
+INSTALLER_FIRST_ARGUMENT="259" # BIT0=1 ==> Clear installer log;
+                               # BIT1=1 ==> Copy and install Tunnelblick.app to /Applications and remove quarantine xattr
+                               # BIT8=1 ==> Install the tunnelblickd launch daemon
+INSTALLER_ARGUMENTS="$INSTALLER_FIRST_ARGUMENT"  # Arguments for the installer command
 
 # Check if the Waiting Room directory exists
 if [ -d "$WAITING_ROOM_DIR" ]; then
     echo "Waiting Room directory exists. Proceeding..."
     cd "$WAITING_ROOM_DIR"
-    
+
     # Check if the DMG file exists
     if [ -f "$DMG_FILE" ]; then
         echo "DMG file '$DMG_FILE' found. Proceeding with DMG attachment..."
-        
+
         # Attach the DMG
         hdiutil attach "$DMG_FILE" -mountpoint "$MOUNT_POINT"
-        
+
         echo "DMG attached. Running installer..."
-        
+
         # Run the installer command
-        "$INSTALLER_COMMAND" "$INSTALLER_ARGUMENTS"
-        
+        "$INSTALLER_COMMAND" $INSTALLER_ARGUMENTS
+
         echo "Installer completed. Waiting for 5 seconds..."
-        
+
         # Wait for 5 seconds
         sleep 5
-        
+
         # Detach the DMG
         hdiutil detach "$MOUNT_POINT"
-        
+
         echo "Delay completed. Removing files containing 'Tunnelblick'..."
-        
+
         # Remove files containing 'Tunnelblick' in the filename
         find "$WAITING_ROOM_DIR" -type f -name "*Tunnelblick*" -exec rm -f {} \;
-        
+
         echo "Files removed. Script completed successfully."
     else
         echo "DMG file '$DMG_FILE' not found in the Waiting Room."
